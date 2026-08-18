@@ -143,13 +143,10 @@ builder.Services.AddAuthorization();
 // ----------------------------------------------------
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("Frontend", policy =>
+    options.AddPolicy("ReactPolicy", policy =>
     {
         policy
-            .WithOrigins(
-                "http://localhost:5173",
-                "http://127.0.0.1:5173"
-            )
+            .AllowAnyOrigin()
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
@@ -179,7 +176,7 @@ using (var scope = app.Services.CreateScope())
 // ----------------------------------------------------
 // Middleware
 // ----------------------------------------------------
-app.UseCors("Frontend");
+app.UseCors("ReactPolicy");
 
 app.UseAuthentication();
 
