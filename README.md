@@ -1,9 +1,5 @@
 
-docker compose up -d mysql
 
-
-cd backend/EmployeeManagement.Api
-dotnet restore
 dotnet run --urls http://localhost:5000
 
 The API will be available at:
