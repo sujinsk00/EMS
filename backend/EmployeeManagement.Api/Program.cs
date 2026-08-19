@@ -141,17 +141,24 @@ builder.Services.AddAuthorization();
 // ----------------------------------------------------
 // CORS
 // ----------------------------------------------------
+var frontendUrl =
+    builder.Configuration["FrontendUrl"]
+    ?? "http://localhost:5173";
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("ReactPolicy", policy =>
+    options.AddPolicy("Frontend", policy =>
     {
         policy
-            .AllowAnyOrigin()
+            .WithOrigins(
+                frontendUrl,
+                "http://localhost:5173",
+                "http://127.0.0.1:5173"
+            )
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
 });
-
 
 // ----------------------------------------------------
 // Build Application
@@ -176,7 +183,7 @@ using (var scope = app.Services.CreateScope())
 // ----------------------------------------------------
 // Middleware
 // ----------------------------------------------------
-app.UseCors("ReactPolicy");
+app.UseCors("Frontend");
 
 app.UseAuthentication();
 
