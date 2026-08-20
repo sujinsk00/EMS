@@ -1,6 +1,20 @@
 import axios from 'axios';
 
-export const api = axios.create({ baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:5000/api' });
+// Provide minimal typing for Vite's import.meta.env in this module to avoid
+// "Property 'env' does not exist on type 'ImportMeta'" TS errors.
+declare global {
+	interface ImportMetaEnv {
+		VITE_API_URL?: string;
+	}
+	interface ImportMeta {
+		readonly env: ImportMetaEnv;
+	}
+}
+export {};
+
+export const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:5000/api'
+});
 api.interceptors.request.use(config => { const token = localStorage.getItem('ems_token'); if (token) config.headers.Authorization = `Bearer ${token}`; return config; });
 api.interceptors.response.use(r => r, error => { if (error.response?.status === 401) { localStorage.removeItem('ems_token'); localStorage.removeItem('ems_user'); window.location.href='/login'; } return Promise.reject(error); });
 
